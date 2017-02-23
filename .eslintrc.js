@@ -6,6 +6,7 @@ module.exports = {
     "rules": {
       "comma-dangle": "off",
       "padded-blocks": "off",
-      "arrow-body-style": "off"
+      "arrow-body-style": "off",
+      "no-console": "off"
     }
 };

@@ -47,7 +47,7 @@ const validateWorkingDirectory = () => {
 
 const getCredentials = () => {
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
 
     const credsQuestions = [
       {
@@ -96,9 +96,8 @@ const doRegister = () => {
     if (response.error.name === 'ValidationError') {
       // for now assume this is because we're already registered
       return Promise.resolve();
-    } else {
-      return Promise.reject(response);
     }
+    return Promise.reject(response);
   });
 
 };
@@ -126,11 +125,11 @@ const prepareProject = () => {
 
   return new Promise((resolve, reject) => {
 
-    cp.exec('git archive -o ._electrode_project.zip master', {}, (err, stdout, stderr) => {
+    cp.exec('git archive -o ._electrode_project.zip master', {}, (err) => {
       if (err) {
         return reject(err);
       }
-      resolve();
+      return resolve();
     });
 
   });
@@ -162,28 +161,35 @@ const buildTask = () => {
   return validateWorkingDirectory()
     .then(() => {
       return getCredentials();
-    }).then((creds) => {
+    })
+    .then((creds) => {
       spinner.start();
       spinner.text = 'Registering you...';
       return verifyCredentials(creds);
-    }).then(() => {
+    })
+    .then(() => {
       return doRegister();
-    }).then((registerResult) => {
+    })
+    .then(() => {
       spinner.text = 'Authorizing you...';
       return doAuth();
-    }).then((authResult) => {
+    })
+    .then((authResult) => {
       spinner.text = 'Preparing your project...';
       apiKey = authResult.apiKey;
       return prepareProject();
-    }).then(() => {
+    })
+    .then(() => {
       spinner.text = 'Uploading your project...';
       return uploadProject();
-    }).then((jobInfo) => {
+    })
+    .then(() => {
       spinner.stop();
       console.log('Success!');
       console.log('Your job has been queued and will be built shortly. You will recieve an email when it is finished. Remember, builds are only available for 24 hours after completion, so make sure you check your email! Have a great day!');
       process.exit(0);
-    }).catch((e) => {
+    })
+    .catch((e) => {
       console.error(e);
     });
 
@@ -195,10 +201,9 @@ console.log('Working with', process.cwd());
 switch (task) {
   case 'build':
     buildTask().catch((e) => {
+      console.error(e);
       process.exit(1);
-    }).then(() => {
-      //console.log('done');
-    })
+    });
     break;
   default:
     console.error('Unrecognised task. Please refer to the README');
