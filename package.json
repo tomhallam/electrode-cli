@@ -1,0 +1,35 @@
+{
+  "name": "electrode-cli",
+  "description": "",
+  "version": "0.0.0",
+  "main": "cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomhallam/electrode-cli.git"
+  },
+  "author": "Tom Hallam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomhallam/electrode-cli/issues"
+  },
+  "homepage": "https://github.com/tomhallam/electrode-cli#readme",
+  "bin": {
+    "electrode": "./bin/electrode-cli"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "eslint": "^3.15.0",
+    "ora": "^1.1.0",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1",
+    "user-home": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint-plugin-import": "^2.2.0"
+  }
+}
