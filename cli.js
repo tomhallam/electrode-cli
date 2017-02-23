@@ -47,7 +47,7 @@ const validateWorkingDirectory = () => {
 
 const getCredentials = () => {
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
 
     const credsQuestions = [
       {
@@ -62,8 +62,10 @@ const getCredentials = () => {
       }
     ];
 
-    return inquirer.prompt(credsQuestions, (answers) => {
-      return resolve(answers);
+    return inquirer.prompt(credsQuestions).then((creds) => {
+      return resolve(creds);
+    }).catch((e) => {
+      return reject(e);
     });
 
   });
@@ -161,13 +163,11 @@ const buildTask = () => {
   return validateWorkingDirectory()
     .then(() => {
       return getCredentials();
-    })
-    .then((creds) => {
+    }).then((creds) => {
       spinner.start();
       spinner.text = 'Registering you...';
       return verifyCredentials(creds);
-    })
-    .then(() => {
+    }).then(() => {
       return doRegister();
     })
     .then(() => {
