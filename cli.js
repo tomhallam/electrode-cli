@@ -3,7 +3,6 @@ const fs = require('fs');
 const cp = require('child_process');
 
 const request = require('request-promise');
-const requestErrors = require('request-promise/errors');
 const inquirer = require('inquirer');
 const ora = require('ora');
 
@@ -49,7 +48,7 @@ const validateWorkingDirectory = () => {
 const getCredentials = () => {
 
   return new Promise((resolve, reject) => {
-    
+
     const credsQuestions = [
       {
         type: 'input',
@@ -148,6 +147,8 @@ const uploadProject = () => {
     },
     formData: {
       package: fs.createReadStream(path.join(process.cwd(), '._electrode_project.zip')),
+      options: JSON.stringify(options),
+      packageJSON: JSON.stringify(packageJSON)
     },
     json: true,
   };
