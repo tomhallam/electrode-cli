@@ -163,11 +163,13 @@ const buildTask = () => {
   return validateWorkingDirectory()
     .then(() => {
       return getCredentials();
-    }).then((creds) => {
+    })
+    .then((creds) => {
       spinner.start();
       spinner.text = 'Registering you...';
       return verifyCredentials(creds);
-    }).then(() => {
+    })
+    .then(() => {
       return doRegister();
     })
     .then(() => {
