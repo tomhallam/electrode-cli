@@ -19,7 +19,8 @@ const task = args[0];
 const options = {
   baseUrl: 'https://electrode.cleverthings.io',
   platforms: argv.platform || ['mac'],
-  arch: argv.arch || 'x64'
+  arch: argv.arch || 'x64',
+  branch: argv.branch || 'master'
 };
 
 // Default ora spinner (used in build step)
@@ -139,9 +140,9 @@ const prepareProject = () => {
 
   return new Promise((resolve, reject) => {
 
-    cp.exec('git archive -o ._electrode_project.zip master', {}, (err) => {
+    cp.exec(`git archive -o ._electrode_project.zip ${options.branch}`, {}, (err, stderr) => {
       if (err) {
-        return reject(err);
+        return reject(err || stderr);
       }
       return resolve();
     });
