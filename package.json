@@ -20,9 +20,12 @@
     "electrode": "./bin/electrode-cli"
   },
   "dependencies": {
+    "cli-table": "^0.3.1",
+    "colors": "^1.1.2",
     "commander": "^2.9.0",
     "eslint": "^3.15.0",
     "inquirer": "^3.0.4",
+    "minimist": "^1.2.0",
     "ora": "^1.1.0",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
