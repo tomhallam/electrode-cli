@@ -9,6 +9,7 @@ const request = require('request-promise');
 const inquirer = require('inquirer');
 const minimist = require('minimist');
 const ora = require('ora');
+const Table = require('cli-table');
 
 const pkg = require('./package.json');
 
@@ -173,6 +174,23 @@ const uploadProject = () => {
 
 };
 
+// Pipe the new project.zip to the remote server, passing our options from the command line
+// and the project.json file
+const getJobs = () => {
+
+  const getJobsOptions = {
+    method: 'GET',
+    uri: `${options.baseUrl}/jobs`,
+    headers: {
+      Authorization: apiKey
+    },
+    json: true
+  };
+
+  return request(getJobsOptions);
+
+};
+
 // Perform all of the above steps in order
 const buildTask = () => {
 
@@ -204,6 +222,53 @@ const buildTask = () => {
 
 };
 
+// View the user's jobs
+const jobsTask = () => {
+
+  return getCredentials()
+    .then((creds) => {
+      spinner.start();
+      spinner.text = 'Authenticating...';
+      return verifyCredentials(creds);
+    })
+    .then(() => {
+      spinner.text = 'Authorizing you...';
+      return doAuth();
+    })
+    .then((authResult) => {
+      apiKey = authResult.apiKey;
+      spinner.text = 'Getting jobs...';
+      return getJobs();
+    })
+    .then((jobs) => {
+
+      const jobsTable = new Table({
+        head: ['ID', 'Status', 'Date Uploaded', 'Download URL']
+      });
+
+      jobs
+        .forEach((job) => {
+
+          /* eslint-disable */
+          jobsTable.push([
+            job._id,
+            job.status.toString().green,
+            job.timeCreated,
+            (job.status === 'done' ? `https://s3.amazonaws.com/ct-electron-bucket/artifacts/${job._id}.tar.gz` : '-')
+          ]);
+          /* eslint-enable */
+
+        });
+
+      spinner.stop();
+
+      console.log('Your jobs'.bold);
+      console.log(jobsTable.toString());
+
+    });
+
+};
+
 console.log(`⚛️  Electrode CLI ${pkg.version} ~ https://electrode.cleverthings.io`.bold);
 
 // What are we doing?
@@ -221,6 +286,12 @@ switch (task) {
         process.exit(1);
       });
 
+    break;
+  case 'jobs':
+    jobsTask().catch((e) => {
+      console.error('!! Error: '.bold.red, e);
+      process.exit(1);
+    });
     break;
   default:
     console.error('😕  Unrecognised task. Please refer to the README');
