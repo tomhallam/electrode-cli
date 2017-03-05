@@ -18,11 +18,15 @@ const argv = minimist(args);
 const task = args[0];
 
 const options = {
-  baseUrl: 'https://electrode.cleverthings.io',
-  platforms: argv.platform || ['mac'],
+  baseUrl: argv.baseUrl || 'https://electrode.cleverthings.io',
+  platforms: argv.platform || ['darwin'],
   arch: argv.arch || 'x64',
   branch: argv.branch || 'master'
 };
+
+if (!(options.platforms instanceof Array)) {
+  options.platforms = [options.platforms];
+}
 
 // Default ora spinner (used in build step)
 const spinner = ora('Electrode CLI');
