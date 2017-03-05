@@ -10,6 +10,7 @@ const inquirer = require('inquirer');
 const minimist = require('minimist');
 const ora = require('ora');
 const Table = require('cli-table');
+const validator = require('validator');
 
 const pkg = require('./package.json');
 
@@ -91,6 +92,11 @@ const verifyCredentials = (creds) => {
 
   if (!creds.email || !creds.password) {
     console.error('✋  You need to enter a username and password!');
+    process.exit(1);
+  }
+
+  if (!validator.isEmail(creds.email)) {
+    console.error('✋  Please enter a valid email address!');
     process.exit(1);
   }
 
@@ -203,11 +209,11 @@ const buildTask = () => {
       return getCredentials();
     })
     .then((creds) => {
-      spinner.start();
-      spinner.text = 'Registering you...';
       return verifyCredentials(creds);
     })
     .then(() => {
+      spinner.start();
+      spinner.text = 'Registering you...';
       return doRegister();
     })
     .then(() => {
