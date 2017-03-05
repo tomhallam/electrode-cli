@@ -68,12 +68,17 @@ const getCredentials = () => {
       {
         type: 'input',
         name: 'email',
-        message: 'Please enter your email address'
+        message: 'Please enter your email address:'
       },
       {
         type: 'password',
         name: 'password',
-        message: 'Please enter a password to secure your builds, or the password you chose before.'
+        message: 'Please enter a password to secure your builds, or the password you chose before:'
+      },
+      {
+        type: 'input',
+        name: 'inviteCode',
+        message: 'Please enter your beta invite code:'
       }
     ];
 
@@ -120,7 +125,7 @@ const doRegister = () => {
       // for now assume this is because we're already registered
       return Promise.resolve();
     }
-    return Promise.reject(response);
+    return Promise.reject(response.error.msg);
   });
 
 };
